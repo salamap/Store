@@ -1,0 +1,25 @@
+<template name="search">
+    <div class="col-md-5 col-sm-12">
+        <p>
+            Search by barcode or by product description
+        </p>
+        <form class="form-inline" id="barCodeForm" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="search" placeholder="Search"/>
+                <input type="submit" class="btn btn-primary btn-sm find"/>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-9 col-sm-12">
+        <table class="table table-hover table-responsive">
+            <tbody>
+            {{#each cartItem}}
+                <tr class="row-cart">
+                    <td>{{Description}}</td>
+                    <td>{{Price}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

@@ -1,0 +1,26 @@
+<template name="reports">
+    <table class="table table-striped table-hover table-responsive">
+        <thead>
+        <th style="padding-left: 7px">Category</th>
+        <th style="padding-left: 9px">Description</th>
+        <th style="padding-left: 9px">Price</th>
+        <th style="padding-left: 9px">Sold</th>
+        <th style="padding-left: 9px">Sold On</th>
+        </thead>
+        <tbody>
+        {{#each soldProduct}}
+            <tr>
+                <td>{{Category}}</td>
+                <td>{{Description}}</td>
+                <td>{{Price}}</td>
+                <td>{{SalePrice}}</td>
+                <td>{{SoldOn}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    <ul class="pager">
+        <li class="previous"><a href="#">&larr; Previous</a></li>
+        <li class="next"><a href="#">Next &rarr;</a></li>
+    </ul>
+</template>

@@ -1,0 +1,26 @@
+<template name="layout">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" style="color: white; font-size:x-large">Saint Mary's Book Store</a>
+            </div>
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right login" style="margin-top: 17px; margin-right: 20px">
+                    <li>{{> loginButtons align="right"}}</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" style="padding-top: 90px">
+        <div class="row-fluid">
+            <div class="col-xs-5 col-md-2 sidebar">
+              {{> navbar}}
+            </div>
+            <div class="container">
+                <div class="col-xs-12 col-md-10 jumbotron">
+                  {{> yield}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

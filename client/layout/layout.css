@@ -1,0 +1,8 @@
+.login-link-text {
+    color: white;
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+    .login-buttons-dropdown-align-right { margin-left: 240px; }
+}

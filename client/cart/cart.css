@@ -1,0 +1,30 @@
+.row-cart{
+    box-shadow: 0 1px 0 #e1e5e8;
+    padding-bottom :0;
+    padding-left: 15px;
+    background-color: #ffffff;
+    margin-bottom: 11px;
+}
+
+.total{
+    font-size: medium;
+    font-weight: bold;
+    background-color: #f2f6f9;
+}
+
+.total .checkout{
+    float: right;
+    cursor: pointer;
+}
+
+.delete{
+    float: right;
+    cursor: pointer;
+}
+#barCodeForm{
+    padding-bottom: 15px;
+}
+
+.input-mini {
+    width: 65px;
+}

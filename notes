@@ -1,0 +1,51 @@
+1. completing purchase                                                  DONE
+    cash tendered and change                                            FUTURE
+    marking product as sold                                             DONE
+
+2. error handling                                                       DONE
+    dialogues                                                           DONE
+
+3. routing                                                              DONE
+    showing the active nav item                                         FUTURE
+    spinner when loading                                                DONE
+
+4. user accounts                                                        DONE
+    Turn off autopublish                                                DONE
+    Subscribe                                                           DONE
+    privileges                                                          DONE
+
+5. Inserting and clearing out barcode                                   DONE
+    clicking on x in inventory view removes the barcode image           DONE
+
+6. Pageination in inventory view                                        DONE
+
+7. Warning when removing from inventory                                 DONE
+
+8. Update button with selected category                                 DONE
+    change list values in dropdown                                      DONE
+
+9. Scanning barcode with scanner in store page                          DONE
+
+10. Tooltips on hover                                                   FUTURE
+
+11. Figure out the parsefloat                                           DONE
+
+12. Make sure the removal from the prodcollection is good               DONE
+
+13. Login                                                               DONE
+
+14. Make header bar responsive                                          DONE
+
+15. Default route for \                                                 DONE
+
+16. Set logout timer                                                    DONE
+
+17. Deleting last item in curr inventory view go to prev view           FUTURE
+
+18. hiding next and prev buttons                                        FUTURE
+
+19. hide and show  barcodes                                             FUTURE
+
+20. set focus on text field                                             DONE/FUTURE
+
+21. Receipt. See Macy's example online

@@ -1,0 +1,44 @@
+<template name="cart">
+    <div class="col-md-4 col-sm-12">
+        <form class="form-inline" id="barCodeForm" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="search" placeholder="Bar Code"/>
+                <input type="submit" value="Add" class="btn btn-primary btn-sm get"/>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-8 col-sm-12 text-left">
+        <table class="table table-hover table-responsive">
+            <tbody>
+            {{#each cartItem}}
+                <tr class="row-cart">
+                    <td>{{Description}}</td>
+                    <td>{{Price}}</td>
+                    <td>
+                        <div class="input-append">
+                            <input class="input-mini" id="discount" type="text" placeholder="Discount"/>
+                            <span class="add-on">%</span>
+                        </div>
+                        <!--<input type="text" class="input-mini" id="discount" placeholder="Discount"/>-->
+                    </td>
+                    <td>
+                        <a class="btn btn-danger btn-mini delete" aria-label="Delete">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="false"></span>
+                        </a>
+                    </td>
+                </tr>
+            {{/each}}
+            <tr class="row-cart total">
+                <td></td>
+                <td>{{Total}}</td>
+                <td></td>
+                <td>
+                    <a class="btn btn-primary btn-lg checkout" aria-label="Check Out">
+                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="false"></span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+</template>
