@@ -56,14 +56,29 @@ if (Meteor.isServer) {
         reportHasMore: function(count) {
             return count < SoldCollection.find({}).count();
         },
-        updateSold: function (prod) {
+        updateSold: function (cart, originalPrices) {
             var user = Meteor.user();
             if (!user) {
                 throw new Meteor.Error(401, "You need to login!");
             }
             else {
-                SoldCollection.insert(prod);
-                ProductCollection.remove(prod._id);
+                var itemsArray = [];
+                for (var i = 0; i < cart.length; i++) {
+                    cart[i].SoldOn = new Date();
+                    cart[i].SalePrice = cart[i].Price;
+                    cart[i].Price = originalPrices[cart[i]._id.toString()];
+                    SoldCollection.insert(cart[i]);
+                    ProductCollection.remove(cart[i]._id);
+                    itemsArray.push(cart[i]);
+                }
+
+                ReceiptCollection.insert({
+                    BarCode: Date.now().toString().slice(-10),
+                    Items: itemsArray,
+                    createdAt: new Date()
+                });
+
+                return ReceiptCollection.findOne({}, {sort: {$natural: -1}});
             }
         }
     });
