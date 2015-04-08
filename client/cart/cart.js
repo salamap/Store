@@ -3,7 +3,7 @@
  */
 if (Meteor.isClient) {
     var cart = new Mongo.Collection(null);
-    var originalPrices = [];
+    var originalPrices = {};
     var total = 0.00;
     Session.set("cartTotal", total);
 
@@ -81,15 +81,27 @@ if (Meteor.isClient) {
                             label: "CONFIRM",
                             className: "btn-success",
                             callback: function () {
-                                cart.find({}).forEach(function(item){
-                                    item.SoldOn = new Date();
-                                    item.SalePrice = item.Price;
-                                    item.Price = originalPrices[item._id.toString()];
-                                    Meteor.call('updateSold', item);
+                                Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, function(err, response) {
+                                    if (response) {
+                                        bootbox.dialog ({
+                                            title: "RECEIPT",
+                                            message: JSON.stringify(response),
+                                            buttons: {
+                                                cancel: {
+                                                    label:"CANCEL",
+                                                    className: "btn-default"
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        bootbox.alert("AN ERROR OCCURRED WHILE PROCESSING THE PURCHASE.");
+                                    }
+                                    cart.remove({});
+                                    total = 0.00;
+                                    Session.set("cartTotal",total);
+                                    originalPrices = {};
                                 });
-                                cart.remove({});
-                                total = 0.00;
-                                Session.set("cartTotal",total);
                             }
                         }
                     }
