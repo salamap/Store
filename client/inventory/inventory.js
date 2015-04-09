@@ -7,9 +7,9 @@ if (Meteor.isClient) {
     Template.addInventory.events({
         "submit form": function (event) {
             event.preventDefault();
-            var category = Session.get("prodCategory");
-            var $desc = $("#prodDesc");
-            var $price = $("#prodPrice");
+            var category =  Session.get("prodCategory");
+            var $desc =     $("#prodDesc");
+            var $price =    $("#prodPrice");
 
             if (typeof category === "undefined" && isEmpty($desc) && (isEmpty($price) || !isValidPrice($price))) {
                 animateThis($(".btn-select"));

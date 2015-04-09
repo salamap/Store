@@ -22,13 +22,15 @@ if (Meteor.isServer) {
             }
             else {
                 ProductCollection.insert({
-                    Description: desc,
-                    Category: category,
-                    Price: accounting.formatMoney(price),
-                    BarCode: barcode,
-                    createdAt: new Date(),
-                    SalePrice: "",
-                    SoldOn: ""
+                    Description:    desc,
+                    Category:       category,
+                    Price:          accounting.formatMoney(price),
+                    BarCode:        barcode,
+                    createdAt:      new Date(),
+                    SalePrice:      "",
+                    SoldOn:         "",
+                    ReceiptCode:    "",
+                    Transaction:    ""
                 });
             }
         },
@@ -56,30 +58,104 @@ if (Meteor.isServer) {
         reportHasMore: function(count) {
             return count < SoldCollection.find({}).count();
         },
-        updateSold: function (cart, originalPrices) {
+        updateSold: function (cart, originalPrices, purchaseTotal) {
             var user = Meteor.user();
             if (!user) {
                 throw new Meteor.Error(401, "You need to login!");
             }
             else {
-                var itemsArray = [];
+                var receiptCode = Date.now().toString().slice(-10);
+                var itemsArray =  [];
                 for (var i = 0; i < cart.length; i++) {
-                    cart[i].SoldOn = new Date();
-                    cart[i].SalePrice = cart[i].Price;
-                    cart[i].Price = originalPrices[cart[i]._id.toString()];
+                    cart[i].SoldOn =        new Date();
+                    cart[i].SalePrice =     cart[i].Price;
+                    cart[i].Price =         originalPrices[cart[i]._id.toString()];
+                    cart[i].ReceiptCode =   receiptCode;
+                    cart[i].Transaction =   "Purchase";
+
                     SoldCollection.insert(cart[i]);
                     ProductCollection.remove(cart[i]._id);
                     itemsArray.push(cart[i]);
                 }
 
                 ReceiptCollection.insert({
-                    BarCode: Date.now().toString().slice(-10),
-                    Items: itemsArray,
-                    createdAt: new Date()
+                    BarCode:        receiptCode,
+                    PurchaseItems:  itemsArray,
+                    ExchangeItems:  [],
+                    ReturnItems:    [],
+                    Total:          purchaseTotal,
+                    createdAt:      new Date()
                 });
 
-                return ReceiptCollection.findOne({}, {sort: {$natural: -1}});
+                return ReceiptCollection.findOne({BarCode: receiptCode});
+            }
+        },
+        doExchange: function (valA, valB) {
+            // find which product is to be given back and which one is to be taken in return
+            var takeWithA  = ProductCollection.findOne({BarCode: valA}),
+                giveBackB  = SoldCollection.findOne({BarCode: valB}),
+                takeWithB  = ProductCollection.findOne({BarCode: valB}),
+                giveBackA  = SoldCollection.findOne({BarCode: valA}),
+                response   = {};
+
+            if (giveBackA && takeWithB) {
+                response.receipt  = exchangeItems(giveBackA, takeWithB);
+                response.giveBack = giveBackA;
+                response.takeWith = takeWithB;
+            }
+            else if (giveBackB && takeWithA) {
+                response.receipt  = exchangeItems(giveBackA, takeWithB);
+                response.giveBack = giveBackB;
+                response.takeWith = takeWithA;
+            }
+            else {
+                // if both fail then throw error
+                throw new Meteor.Error("invalid-codes", "THE PROVIDED BAR CODES DO NOT MATCH ANY PRODUCT IN THE SYSTEM.");
+            }
+
+            return response;
+        }
+
+    });
+
+    // The product the customer gives back and the product the customer takes in turn
+    function exchangeItems (give, take) {
+        // get the receipt of the item the customer is giving back
+        var receiptCode = give.ReceiptCode;
+        var theReceipt  = ReceiptCollection.findOne({BarCode: receiptCode});
+
+        // update the properties of the item the customer is taking
+        take.SoldOn      = new Date();
+        take.SalePrice   = give.SalePrice;
+        take.ReceiptCode = receiptCode;
+        take.Transaction = "Exchange";
+
+        // remove taken product from product collection and add to sold collection
+        ProductCollection.remove(take._id);
+        SoldCollection.insert(take);
+
+        // update the properties of the item the customer is giving back
+        give.SoldOn      = "";
+        give.ReceiptCode = "";
+        give.Transaction = "";
+
+        // remove product given back from sold collection and add to product collection
+        ProductCollection.insert(give);
+        SoldCollection.remove(give._id);
+
+        console.log(theReceipt);
+        // add the given item and the taken item to the exchange array in the receipt document
+        theReceipt.ExchangeItems.push(take);
+        theReceipt.ExchangeItems.push(give);
+
+        // find given back item in the purchased array inside the receipt document and overwrite it with the updated
+        // given back item
+        for (var i = 0; i < theReceipt.PurchaseItems.length; i++) {
+            if (theReceipt.PurchaseItems[i]._id === give._id) {
+                theReceipt.PurchaseItems[i] = give;
             }
         }
-    });
+
+        return theReceipt;
+    }
 }

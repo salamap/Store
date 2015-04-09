@@ -1,3 +1,14 @@
 <template name="exchange">
-
+    <div class="col-md-5 col-sm-12">
+        <p>
+            Manually enter or scan the bar codes of the items you wish to exchange
+        </p>
+        <form class="form" id="barCodeForm" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="searchOne" placeholder="Bar Code"/>
+                <input type="text" class="form-control" id="searchTwo" placeholder="Bar Code"/>
+                <input type="submit" value="Exchange" class="btn btn-primary btn-sm exchange"/>
+            </div>
+        </form>
+    </div>
 </template>
