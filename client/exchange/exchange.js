@@ -35,10 +35,10 @@ if (Meteor.isClient) {
                             className: "btn-success",
                             callback: function () {
                                 Meteor.call('doExchange', $itemA.val(), $itemB.val(), function (err, response) {
-                                    if (err.error === "invalid-codes") {
+                                    if (err && err.error === "invalid-codes") {
                                         bootbox.alert(err.reason);
                                     }
-                                    else if (err.error != "invalid-codes") {
+                                    else if (err && err.error != "invalid-codes") {
                                         bootbox.alert(err.error);
                                     }
                                     else if (!err && response) {

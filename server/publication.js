@@ -104,7 +104,7 @@ if (Meteor.isServer) {
                 response.takeWith = takeWithB;
             }
             else if (giveBackB && takeWithA) {
-                response.receipt  = exchangeItems(giveBackA, takeWithB);
+                response.receipt  = exchangeItems(giveBackB, takeWithA);
                 response.giveBack = giveBackB;
                 response.takeWith = takeWithA;
             }
@@ -120,11 +120,11 @@ if (Meteor.isServer) {
 
     // The product the customer gives back and the product the customer takes in turn
     function exchangeItems (give, take) {
-        // get the receipt of the item the customer is giving back
+        // get the receipt code of the item the customer is giving back
         var receiptCode = give.ReceiptCode;
-        var theReceipt  = ReceiptCollection.findOne({BarCode: receiptCode});
 
         // update the properties of the item the customer is taking
+        // for now assume exchanges will be one to one, no price difference
         take.SoldOn      = new Date();
         take.SalePrice   = give.SalePrice;
         take.ReceiptCode = receiptCode;
@@ -134,7 +134,8 @@ if (Meteor.isServer) {
         ProductCollection.remove(take._id);
         SoldCollection.insert(take);
 
-        // update the properties of the item the customer is giving back
+        // update the properties of the item the customer is giving back.
+        // do not overwrite SalePrice because we want to know what it sold for
         give.SoldOn      = "";
         give.ReceiptCode = "";
         give.Transaction = "";
@@ -143,19 +144,25 @@ if (Meteor.isServer) {
         ProductCollection.insert(give);
         SoldCollection.remove(give._id);
 
-        console.log(theReceipt);
         // add the given item and the taken item to the exchange array in the receipt document
-        theReceipt.ExchangeItems.push(take);
-        theReceipt.ExchangeItems.push(give);
+        ReceiptCollection.update(
+          { BarCode: receiptCode },
+          { $push: {
+              ExchangeItems: {
+                  $each: [take, give]
+              }
+          }
+          }
+        );
 
-        // find given back item in the purchased array inside the receipt document and overwrite it with the updated
-        // given back item
-        for (var i = 0; i < theReceipt.PurchaseItems.length; i++) {
-            if (theReceipt.PurchaseItems[i]._id === give._id) {
-                theReceipt.PurchaseItems[i] = give;
-            }
-        }
+        ReceiptCollection.update(
+          {
+              BarCode: receiptCode,
+              'PurchaseItems._id': give._id
+          },
+          { $set: { "PurchaseItems.$" : give } }
+        );
 
-        return theReceipt;
+        return ReceiptCollection.findOne({BarCode: receiptCode});
     }
 }
