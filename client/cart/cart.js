@@ -81,7 +81,7 @@ if (Meteor.isClient) {
                             label: "CONFIRM",
                             className: "btn-success",
                             callback: function () {
-                                Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, function(err, response) {
+                                Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, accounting.formatMoney(Session.get("cartTotal")), function(err, response) {
                                     if (response) {
                                         bootbox.dialog ({
                                             title: "RECEIPT",
