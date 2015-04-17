@@ -44,7 +44,7 @@ if (Meteor.isClient) {
                                     else if (!err && response) {
                                         bootbox.dialog ({
                                             title: "RECEIPT",
-                                            message: "Exchanged " + response.giveBack + "with " + response.takeWith,
+                                            message: "Exchanged " + response.giveBack + " with " + response.takeWith,
                                             buttons: {
                                                 confirm: {
                                                     label:"DONE",

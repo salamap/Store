@@ -114,6 +114,36 @@ if (Meteor.isServer) {
             }
 
             return response;
+        },
+        doReturn: function (itemCode) {
+            var itemToReturn = SoldCollection.findOne({BarCode: itemCode});
+            var receiptCode;
+
+            if (itemToReturn) {
+                receiptCode              = itemToReturn.ReceiptCode;
+                itemToReturn.SoldOn      = "";
+                itemToReturn.ReceiptCode = "";
+                itemToReturn.Transaction = "Return";
+                itemToReturn.SalePrice   = "";
+
+                ProductCollection.insert(itemToReturn);
+                SoldCollection.remove(itemToReturn._id);
+
+                ReceiptCollection.update(
+                  { BarCode: receiptCode },
+                  { $push: {
+                      ReturnItems: {
+                          $each: [itemToReturn]
+                      }
+                    }
+                  }
+                );
+            }
+            else {
+                throw new Meteor.Error("invalid-codes", "THE PROVIDED BAR CODES DO NOT MATCH ANY PRODUCT IN THE SYSTEM.");
+            }
+
+            return ReceiptCollection.findOne({BarCode: receiptCode});
         }
 
     });
@@ -151,17 +181,18 @@ if (Meteor.isServer) {
               ExchangeItems: {
                   $each: [take, give]
               }
-          }
+            }
           }
         );
 
-        ReceiptCollection.update(
-          {
-              BarCode: receiptCode,
-              'PurchaseItems._id': give._id
-          },
-          { $set: { "PurchaseItems.$" : give } }
-        );
+        // not necessary for now
+        //ReceiptCollection.update(
+        //  {
+        //      BarCode: receiptCode,
+        //      'PurchaseItems._id': give._id
+        //  },
+        //  { $set: { "PurchaseItems.$" : give } }
+        //);
 
         return ReceiptCollection.findOne({BarCode: receiptCode});
     }
