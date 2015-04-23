@@ -1,35 +1,50 @@
 <template name="inventory">
-        <div class="col-md-4 col-sm-12">
-            {{> addInventory}}
-        </div>
-        <div class="col-md-8 col-sm-12 text-left">
-            {{> viewInventory}}
+    <div class="section">
+            <div class="row">
+                <div class="col-md-6">
+                    {{> addInventory}}
+                </div>
+                <div class="col-md-6">
+                    {{> viewInventory}}
+                </div>
+            </div>
         </div>
 </template>
 
 
 
 <template name="addInventory">
-    <form role="form">
-        <div class="form-group dropdown">
-            <select class="category">
-                <option value="Audio">Audio</option>
-                <option value="Books">Books</option>
-                <option value="Candles">Candles</option>
-                <option value="Deacon">Deacon</option>
-                <option value="Icons">Icons</option>
-                <option value="Incense">Incense</option>
-                <option value="Statue">Statue</option>
-                <option value="Trinkets">Trinkets</option>
-                <option value="Video">Video</option>
-            </select>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <div class="btn-group btn-group-md col-sm-10">
+                <a class="btn btn-default dropdown-toggle" id="prodCat" data-toggle="dropdown"> Category <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a ref="#">Audio</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Candles</a></li>
+                    <li><a href="#">Deacon</a></li>
+                    <li><a href="#">Icons</a></li>
+                    <li><a href="#">Incense</a></li>
+                    <li><a href="#">Statue</a></li>
+                    <li><a href="#">Trinkets</a></li>
+                    <li><a href="#">Video</a></li>
+                </ul>
+            </div>
         </div>
         <div class="form-group">
-            <input type="text" name="prodDesc" id="prodDesc" placeholder="Description">
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="prodDesc" placeholder="Description">
+            </div>
         </div>
-        <div class="form-group form-inline">
-            <input type="text" name="prodPrice" id="prodPrice" placeholder="Price">
-            <input type="submit" value="Add" class="btn btn-primary btn-sm add"/>
+        <div class="form-group">
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="prodPrice" placeholder="Price">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary add">Add</button>
+            </div>
         </div>
     </form>
 </template>
@@ -52,8 +67,8 @@
                 <td>{{Price}}</td>
                 <td>{{BarCode}}</td>
                 <td>
-                    <a class="btn btn-danger btn-xs delete" aria-label="Delete">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="false"></span>
+                    <a class="btn btn-danger btn-xs delete">
+                        <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </td>
             </tr>

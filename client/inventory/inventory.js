@@ -11,13 +11,13 @@ if (Meteor.isClient) {
             var $desc =     $("#prodDesc");
             var $price =    $("#prodPrice");
 
-            if (typeof category === "undefined" && isEmpty($desc) && (isEmpty($price) || !isValidPrice($price))) {
-                animateThis($(".btn-select"));
+            if ((typeof category === "undefined" || category === "Category") && isEmpty($desc) && (isEmpty($price) || !isValidPrice($price))) {
+                animateThis($("#prodCat"));
                 animateThis($desc);
                 animateThis($price);
             }
-            else if (typeof category === "undefined") {
-                animateThis($(".btn-select"));
+            else if (typeof category === "undefined" || category === "Category") {
+                animateThis($("#prodCat"));
             }
             else if (isEmpty($desc)) {
                 animateThis($desc);
@@ -30,16 +30,24 @@ if (Meteor.isClient) {
                 Meteor.call('addToInventory', $desc.val().trim(), category, $price.val().trim(), code);
                 $desc.val("");
                 $price.val("");
+                $("#prodCat").html('Category <span class="caret"></span>');
                 //$("#barCodeImage").barcode({code: code, crc: false}, "std25", {barWidth: 1, barHeight: 80, output: "svg"});
             }
             return;
         },
 
-        "change .category": function(event) {
+        "click .dropdown-menu li a": function (event) {
             event.preventDefault();
             var target = $(event.currentTarget);
-            Session.set("prodCategory", target.val());
+            var selText = target.text();
+            Session.set("prodCategory", selText);
+            $("#prodCat").html(selText+' <span class="caret"></span>');
         }
+        //"change .category": function(event) {
+        //    event.preventDefault();
+        //    var target = $(event.currentTarget);
+        //    Session.set("prodCategory", target.val());
+        //}
     });
 
     Template.viewInventory.events({
