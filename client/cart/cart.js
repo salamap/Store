@@ -83,9 +83,10 @@ if (Meteor.isClient) {
                             callback: function () {
                                 Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, accounting.formatMoney(Session.get("cartTotal")), function(err, response) {
                                     if (response) {
+                                        Session.set("receipt", response);
                                         bootbox.dialog ({
                                             title: "RECEIPT",
-                                            message: JSON.stringify(response),
+                                            message: renderReceiptTemplate(Template.receipt),
                                             buttons: {
                                                 cancel: {
                                                     label:"CANCEL",
@@ -122,4 +123,30 @@ if (Meteor.isClient) {
             return accounting.formatMoney(Session.get("cartTotal"));
         }
     });
+
+    Template.receipt.helpers({
+        receiptCode: function() {
+            return Session.get("receipt").BarCode;
+        },
+
+        receiptDate: function() {
+            return Session.get("receipt").createdAt;
+        },
+
+        purchaseItems: function() {
+            return Session.get("receipt").PurchaseItems;
+        },
+
+        receiptTotal: function() {
+            return Session.get("receipt").Total;
+        }
+
+    });
+
+    function renderReceiptTemplate (template, data) {
+        var node = document.createElement("div");
+        document.body.appendChild(node);
+        Blaze.renderWithData(template, data, node);
+        return node;
+    }
 }

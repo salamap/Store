@@ -1,53 +1,37 @@
 <template name="receipt">
-    <div class="section">
+    <div class="section" id="receiptModal">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="text-center">St. Mary's Store</h2>
+                    <h4 class="text-center">St. Mary's Store</h4>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <h3 class="text-center">Receipt Barcode</h3>
+                <div class="col-xs-6">
+                    <h5 class="text-center">{{receiptCode}}</h5>
                 </div>
-                <div class="col-md-6">
-                    <h3 class="text-center">Receipt Date</h3>
+                <div class="col-xs-6">
+                    <h5 class="text-center">{{receiptDate}}</h5>
                 </div>
             </div>
             <div class="row">
-                <h3>Purchases</h3>
+                <h5>Purchases</h5>
+                    <div class="col-md-12">
+                        <ul class="list-group">
+                            {{#each purchaseItems}}
+                            <li class="list-group-item">
+                                <div class="col-md-6">{{Description}}</div>
+                                <div class="col-md-3">{{Price}}</div>
+                                <div class="col-md-3">{{BarCode}}</div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+            </div>
+            <div class="row">
+                <h5>Total</h5>
                 <div class="col-md-12">
-                    <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <h3>Exchanges</h3>
-                <div class="col-md-12">
-                    <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <h3>Returns</h3>
-                <div class="col-md-12">
-                    <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
+                    {{receiptTotal}}
                 </div>
             </div>
         </div>
