@@ -83,12 +83,13 @@ if (Meteor.isClient) {
                             callback: function () {
                                 Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, accounting.formatMoney(Session.get("cartTotal")), function(err, response) {
                                     if (response) {
+                                        Session.set("receipt", response);
                                         bootbox.dialog ({
                                             title: "RECEIPT",
-                                            message: JSON.stringify(response),
+                                            message: renderReceiptTemplate(Template.receipt),
                                             buttons: {
-                                                cancel: {
-                                                    label:"CANCEL",
+                                                confirm: {
+                                                    label:"PRINT",
                                                     className: "btn-default"
                                                 }
                                             }
