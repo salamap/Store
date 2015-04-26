@@ -88,8 +88,8 @@ if (Meteor.isClient) {
                                             title: "RECEIPT",
                                             message: renderReceiptTemplate(Template.receipt),
                                             buttons: {
-                                                cancel: {
-                                                    label:"CANCEL",
+                                                confirm: {
+                                                    label:"PRINT",
                                                     className: "btn-default"
                                                 }
                                             }
@@ -123,30 +123,4 @@ if (Meteor.isClient) {
             return accounting.formatMoney(Session.get("cartTotal"));
         }
     });
-
-    Template.receipt.helpers({
-        receiptCode: function() {
-            return Session.get("receipt").BarCode;
-        },
-
-        receiptDate: function() {
-            return Session.get("receipt").createdAt;
-        },
-
-        purchaseItems: function() {
-            return Session.get("receipt").PurchaseItems;
-        },
-
-        receiptTotal: function() {
-            return Session.get("receipt").Total;
-        }
-
-    });
-
-    function renderReceiptTemplate (template, data) {
-        var node = document.createElement("div");
-        document.body.appendChild(node);
-        Blaze.renderWithData(template, data, node);
-        return node;
-    }
 }

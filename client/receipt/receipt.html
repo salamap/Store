@@ -1,39 +1,43 @@
 <template name="receipt">
-    <div class="section" id="receiptModal">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4 class="text-center">St. Mary's Store</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <h5 class="text-center">{{receiptCode}}</h5>
-                </div>
-                <div class="col-xs-6">
-                    <h5 class="text-center">{{receiptDate}}</h5>
-                </div>
-            </div>
-            <div class="row">
-                <h5>Purchases</h5>
-                    <div class="col-md-12">
-                        <ul class="list-group">
-                            {{#each purchaseItems}}
-                            <li class="list-group-item">
-                                <div class="col-md-6">{{Description}}</div>
-                                <div class="col-md-3">{{Price}}</div>
-                                <div class="col-md-3">{{BarCode}}</div>
-                            </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-            </div>
-            <div class="row">
-                <h5>Total</h5>
-                <div class="col-md-12">
-                    {{receiptTotal}}
-                </div>
-            </div>
-        </div>
-    </div>
+    <table class="table table-responsive">
+        <tbody>
+        <tr><h4>St. Mary's Store</h4></tr>
+        <tr>{{receiptCode}}</tr>
+        <tr>{{receiptDate}}</tr>
+        <tr></tr>
+        <tr><h5>Purchases:</h5></tr>
+        {{#each purchaseItems}}
+            <tr>
+                <td>{{Description}}</td>
+                <td>{{SalePrice}}</td>
+                <td>{{BarCode}}</td>
+            </tr>
+        {{/each}}
+        {{#if hasExchanges}}
+            <tr><h5>Exchanges:</h5></tr>
+            {{#each exchangeItems}}
+                <tr>
+                    <td>{{Description}}</td>
+                    <td>{{SalePrice}}</td>
+                    <td>{{BarCode}}</td>
+                </tr>
+            {{/each}}
+        {{/if}}
+        {{#if hasReturns}}
+            <tr><h5>Returns:</h5></tr>
+            {{#each returnItems}}
+                <tr>
+                    <td>{{Description}}</td>
+                    <td>{{SalePrice}}</td>
+                    <td>{{BarCode}}</td>
+                </tr>
+            {{/each}}
+        {{/if}}
+        <tr>
+            <td><h5>Total:</h5></td>
+            <td>{{receiptTotal}}</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 </template>
