@@ -45,7 +45,7 @@ if (Meteor.isClient) {
                                         Session.set("receipt", response.receipt);
                                         bootbox.dialog ({
                                             title: "RECEIPT",
-                                            message: renderReceiptTemplate(Template.receipt),
+                                            message: renderTemplate(Template.receipt),
                                             buttons: {
                                                 confirm: {
                                                     label:"PRINT",

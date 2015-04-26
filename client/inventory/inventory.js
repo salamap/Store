@@ -99,7 +99,7 @@ if (Meteor.isClient) {
                     buttons: {
                         success: {
                             label: "Print",
-                            className: "btn-success",
+                            className: "btn-default",
                             callback: function () {
                                 //TODO
                             }
