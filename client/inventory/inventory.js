@@ -43,11 +43,6 @@ if (Meteor.isClient) {
             Session.set("prodCategory", selText);
             $("#prodCat").html(selText+' <span class="caret"></span>');
         }
-        //"change .category": function(event) {
-        //    event.preventDefault();
-        //    var target = $(event.currentTarget);
-        //    Session.set("prodCategory", target.val());
-        //}
     });
 
     Template.viewInventory.events({
@@ -95,6 +90,23 @@ if (Meteor.isClient) {
                     bootbox.alert("THERE WAS AN INTERNAL SERVER ERROR.");
                 }
             });
+        },
+
+        "click #showLabels": function() {
+            bootbox.dialog({
+                    title: "BarCodes",
+                    message: renderTemplate(Template.showLabelModal),
+                    buttons: {
+                        success: {
+                            label: "Print",
+                            className: "btn-success",
+                            callback: function () {
+                                //TODO
+                            }
+                        }
+                    }
+                }
+            );
         }
     });
 
@@ -102,9 +114,12 @@ if (Meteor.isClient) {
         products: function() {
             if (ProductCollection.find().count() === 0) return ProductCollection.find({});
             return ProductCollection.find({}, {sort: {createdAt: -1}});
-        },
+        }
+    });
+
+    Template.showLabelModal.helpers({
         labels: function() {
-            var codes=[]
+            var codes=[];
             ProductCollection.find({}, {sort: {createdAt: -1}}).fetch().forEach(function(prod) {
                 codes.push({
                     Code: '*'+prod.BarCode+'*',

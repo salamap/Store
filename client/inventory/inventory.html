@@ -76,17 +76,20 @@
         </tbody>
     </table>
     <ul class="pager">
-        <li class="previous"><a href="#">&larr; Previous</a></li>
-        <li class="next"><a href="#">Next &rarr;</a></li>
+        <li class="previous"><a href="#">&larr;</a></li>
+        <li id="showLabels"><a href="#">Show Bar Codes</a></li>
+        <li class="next"><a href="#">&rarr;</a></li>
     </ul>
-    <div class="row">
-        <div class="list-group">
-            {{#each labels}}
-                <div class="list-group-item">
-                    <div class="barcode" align="center">{{Code}}</div>
-                    <div align="center">{{Raw}}</div>
-                </div>
-            {{/each}}
-        </div>
+</template>
+
+
+<template name="showLabelModal">
+    <div class="list-group">
+        {{#each labels}}
+            <div class="list-group-item">
+                <div class="barcode" align="center">{{Code}}</div>
+                <div align="center">{{Raw}}</div>
+            </div>
+        {{/each}}
     </div>
 </template>
