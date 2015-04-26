@@ -92,7 +92,7 @@ if (Meteor.isClient) {
             });
         },
 
-        "click #showLabels": function(event, template) {
+        "click #showLabels": function() {
             bootbox.dialog({
                     title: "BarCodes",
                     message: renderTemplate(Template.showLabelModal),
@@ -139,12 +139,5 @@ if (Meteor.isClient) {
 
     function isValidPrice($price) {
         return $price.val().match(/^\$?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}[0-9]{0,}(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/);
-    }
-
-    function renderTemplate (template, data) {
-        var node = document.createElement("div");
-        document.body.appendChild(node);
-        Blaze.renderWithData(template, data, node);
-        return node;
     }
 }
