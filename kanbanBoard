@@ -1,0 +1,31 @@
+Printing
+  Receipts
+  Barcodes
+
+Search
+  backend
+  frontend
+
+Need a way to handle multiple returns or exchanges in a
+single transaction.
+
+Receipt look
+
+Revisit the UI
+    responsive
+    Barcode layout
+    showing the active nav item
+    Icon
+    less?
+
+JSHINT
+
+naming conventions
+
+cash tendered and change
+
+Tooltips on hover
+
+Deleting last item in curr inventory view go to prev view
+
+hiding next and prev buttons
