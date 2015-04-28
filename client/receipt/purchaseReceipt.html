@@ -1,0 +1,25 @@
+<template name="purchaseReceipt">
+    <table class="table table-responsive">
+        <tbody>
+        <tr><h4>St. Mary's Store</h4></tr>
+        <tr><h5>Purchase Receipt</h5></tr>
+        <tr class="barcode">{{barCode}}</tr>
+        <tr>{{receiptCode}}</tr>
+        <tr>{{receiptDate}}</tr>
+        <tr></tr>
+        <tr><h5>Purchases:</h5></tr>
+        {{#each purchaseItems}}
+            <tr>
+                <td>{{Description}}</td>
+                <td>{{SalePrice}}</td>
+                <td>{{BarCode}}</td>
+            </tr>
+        {{/each}}
+        <tr>
+            <td><h5>Total:</h5></td>
+            <td>{{receiptTotal}}</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</template>

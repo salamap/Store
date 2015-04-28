@@ -2,9 +2,13 @@
  * Created by peter.salama on 4/25/15.
  */
 if (Meteor.isClient) {
-  Template.receipt.helpers({
+  Template.purchaseReceipt.helpers({
     receiptCode: function () {
       return Session.get("receipt").BarCode;
+    },
+
+    barCode: function () {
+      return '*'+Session.get("receipt").BarCode+'*';
     },
 
     receiptDate: function () {
@@ -15,8 +19,50 @@ if (Meteor.isClient) {
       return Session.get("receipt").PurchaseItems;
     },
 
-    exchangeItems: function () {
-      return Session.get("receipt").ExchangeItems;
+    receiptTotal: function () {
+      return Session.get("receipt").Total;
+    }
+  });
+
+
+  Template.exchangeReceipt.helpers({
+    receiptCode: function () {
+      return Session.get("receipt").BarCode;
+    },
+
+    barCode: function () {
+      return '*'+this.receiptCode().BarCode+'*';
+    },
+
+    receiptDate: function () {
+      return Session.get("receipt").createdAt;
+    },
+
+    purchaseItems: function () {
+      return Session.get("receipt").PurchaseItems;
+    },
+
+    returnItems: function () {
+      return Session.get("receipt").ReturnedItems;
+    },
+
+    receiptTotal: function () {
+      return Session.get("receipt").Total;
+    }
+  });
+
+
+  Template.returnReceipt.helpers({
+    receiptCode: function () {
+      return Session.get("receipt").BarCode;
+    },
+
+    barCode: function () {
+      return '*'+this.receiptCode().BarCode+'*';
+    },
+
+    receiptDate: function () {
+      return Session.get("receipt").createdAt;
     },
 
     returnItems: function () {
@@ -25,14 +71,6 @@ if (Meteor.isClient) {
 
     receiptTotal: function () {
       return Session.get("receipt").Total;
-    },
-
-    hasExchanges: function () {
-      return Session.get("receipt").ExchangeItems.length > 0;
-    },
-
-    hasReturns: function () {
-      return Session.get("receipt").ReturnItems.length > 0;
     }
   });
 }
