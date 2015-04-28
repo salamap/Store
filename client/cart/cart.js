@@ -85,8 +85,8 @@ if (Meteor.isClient) {
                                     if (response) {
                                         Session.set("receipt", response);
                                         bootbox.dialog ({
-                                            title: "RECEIPT",
-                                            message: renderTemplate(Template.receipt),
+                                            title: "PURCHASE RECEIPT",
+                                            message: renderTemplate(Template.purchaseReceipt),
                                             buttons: {
                                                 confirm: {
                                                     label:"PRINT",
@@ -100,7 +100,7 @@ if (Meteor.isClient) {
                                     }
                                     cart.remove({});
                                     total = 0.00;
-                                    Session.set("cartTotal",total);
+                                    Session.set("cartTotal", total);
                                     originalPrices = {};
                                 });
                             }

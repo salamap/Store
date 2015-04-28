@@ -115,7 +115,7 @@ if (Meteor.isServer) {
     doReturn: function (itemCode) {
       var itemToReturn = SoldCollection.findOne({BarCode: itemCode});
       var receiptCode  = Date.now().toString().slice(-10);
-      var transactionDate = new Date.now();
+      var transactionDate = new Date();
 
       if (itemToReturn) {
         itemToReturn.SoldOn      = "";
@@ -126,7 +126,7 @@ if (Meteor.isServer) {
 
         ReturnReceiptCollection.insert({
           BarCode:        receiptCode,
-          ReturnItems:    itemToReturn,
+          ReturnItems:    [itemToReturn],
           Total:          itemToReturn.SalePrice,
           createdAt:      transactionDate
         });
@@ -178,9 +178,9 @@ if (Meteor.isServer) {
     // add the given item and the taken item to the exchange array in the receipt document
     ExchangeReceiptCollection.insert({
       BarCode:        receiptCode,
-      PurchaseItems:  take,
-      ExchangedItems: give,
-      Total:          take.SalePrice - give.SalePrice,
+      PurchaseItems:  [take],
+      ReturnedItems: [give],
+      Total:          accounting.formatMoney(accounting.unformat(take.SalePrice) - accounting.unformat(give.SalePrice)),
       createdAt:      transactionDate
     });
     //ReceiptCollection.update(
