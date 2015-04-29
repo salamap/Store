@@ -101,7 +101,7 @@ if (Meteor.isClient) {
                             label: "Print",
                             className: "btn-default",
                             callback: function () {
-                                //TODO
+                              window.print();
                             }
                         }
                     }

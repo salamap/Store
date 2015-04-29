@@ -1,0 +1,12 @@
+@media print {
+  body * {
+    visibility:hidden;
+  } #printSection, #printSection * {
+        visibility:visible;
+    }
+    #printSection {
+        position: fixed;
+        left:0;
+        top:0;
+    }
+}

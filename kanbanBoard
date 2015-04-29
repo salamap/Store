@@ -1,7 +1,3 @@
-Printing
-  Receipts
-  Barcodes
-
 Search
   backend
   frontend
@@ -9,7 +5,7 @@ Search
 Need a way to handle multiple returns or exchanges in a
 single transaction.
 
-Receipt look
+lock access to return, exchange, and search views
 
 Revisit the UI
     responsive
@@ -17,8 +13,6 @@ Revisit the UI
     showing the active nav item
     Icon
     less?
-
-JSHINT
 
 naming conventions
 

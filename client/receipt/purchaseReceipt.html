@@ -1,11 +1,11 @@
 <template name="purchaseReceipt">
-    <table class="table table-responsive">
+    <table class="table table-responsive" id="printSection">
         <tbody>
-        <tr><h4>St. Mary's Store</h4></tr>
-        <tr><h5>Purchase Receipt</h5></tr>
-        <tr class="barcode">{{barCode}}</tr>
-        <tr>{{receiptCode}}</tr>
-        <tr>{{receiptDate}}</tr>
+        <tr><h4 class="text-center">St. Mary's Store</h4></tr>
+        <tr><h5 class="text-center">Purchase Receipt</h5></tr>
+        <tr class="barcode text-center">{{barCode}}</tr>
+        <tr class="text-center">{{receiptCode}}</tr>
+        <tr class="text-center">{{receiptDate}}</tr>
         <tr></tr>
         <tr><h5>Purchases:</h5></tr>
         {{#each purchaseItems}}

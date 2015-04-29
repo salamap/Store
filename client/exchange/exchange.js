@@ -49,7 +49,10 @@ if (Meteor.isClient) {
                                             buttons: {
                                                 confirm: {
                                                     label:"PRINT",
-                                                    className: "btn-default"
+                                                    className: "btn-default",
+                                                    callback: function () {
+                                                        window.print();
+                                                    }
                                                 }
                                             }
                                         });
