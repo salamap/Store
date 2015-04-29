@@ -88,6 +88,10 @@ if (Meteor.isServer) {
       }
     },
     doExchange: function (valA, valB) {
+      var user = Meteor.user();
+      if (!user) {
+        throw new Meteor.Error(401, "You need to login!");
+      }
       // find which product is to be given back and which one is to be taken in return
       var takeWithA  = ProductCollection.findOne({BarCode: valA}),
         giveBackB  = SoldCollection.findOne({BarCode: valB}),
@@ -113,6 +117,10 @@ if (Meteor.isServer) {
       return response;
     },
     doReturn: function (itemCode) {
+      var user = Meteor.user();
+      if (!user) {
+        throw new Meteor.Error(401, "You need to login!");
+      }
       var itemToReturn = SoldCollection.findOne({BarCode: itemCode});
       var receiptCode  = Date.now().toString().slice(-10);
       var transactionDate = new Date();
