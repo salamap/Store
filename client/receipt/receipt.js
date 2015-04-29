@@ -31,7 +31,7 @@ if (Meteor.isClient) {
     },
 
     barCode: function () {
-      return '*'+this.receiptCode().BarCode+'*';
+        return '*'+Session.get("receipt").BarCode+'*';
     },
 
     receiptDate: function () {
@@ -58,7 +58,7 @@ if (Meteor.isClient) {
     },
 
     barCode: function () {
-      return '*'+this.receiptCode().BarCode+'*';
+        return '*'+Session.get("receipt").BarCode+'*';
     },
 
     receiptDate: function () {

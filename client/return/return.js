@@ -1,9 +1,6 @@
 /**
  * Created by peter.salama on 4/16/15.
  */
-/**
- * Created by petersalama on 4/7/15.
- */
 if (Meteor.isClient) {
   Template.return.rendered = function() {
     this.$("#search").focus();
@@ -52,7 +49,10 @@ if (Meteor.isClient) {
                       buttons: {
                         confirm: {
                           label:"PRINT",
-                          className: "btn-default"
+                          className: "btn-default",
+                          callback: function () {
+                            window.print();
+                          }
                         }
                       }
                     });
