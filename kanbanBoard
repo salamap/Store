@@ -5,8 +5,6 @@ Search
 Need a way to handle multiple returns or exchanges in a
 single transaction.
 
-lock access to return, exchange, and search views
-
 Revisit the UI
     responsive
     Barcode layout
