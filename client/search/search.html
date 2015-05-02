@@ -1,25 +1,51 @@
 <template name="search">
-    <div class="col-md-5 col-sm-12">
-        <p>
-            Search by barcode or by product description
-        </p>
-        <form class="form-inline" id="barCodeForm" role="form">
-            <div class="form-group">
-                <input type="text" class="form-control" id="search" placeholder="Search"/>
-                <input type="submit" class="btn btn-primary btn-sm find"/>
-            </div>
-        </form>
+    <div class="col-md-12 col-sm-12">
+        <div class="input-group">
+            {{> esInput index=indexes placeholder="Search..." class="form-control"}}
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="searching">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+        </div>
     </div>
-    <div class="col-md-9 col-sm-12">
-        <table class="table table-hover table-responsive">
-            <tbody>
-            {{#each cartItem}}
-                <tr class="row-cart">
-                    <td>{{Description}}</td>
-                    <td>{{Price}}</td>
-                </tr>
-            {{/each}}
-            </tbody>
-        </table>
+
+    <div>
+      {{#esEach index="Product"}}
+        {{> Product}}
+      {{/esEach}}
+
+      {{#esEach index="Sold"}}
+        {{> Sold}}
+      {{/esEach}}
+
+      {{#ifEsHasNoResults index=indexes}}
+          <div class="no-results">No results found.</div>
+      {{/ifEsHasNoResults}}
+
+      {{#ifEsIsSearching index=indexes}}
+          <div>Loading...</div>
+      {{/ifEsIsSearching}}
     </div>
+</template>
+
+
+<template name="Sold">
+    <ul class="list-inline" style="margin-left: 25px">
+        <li style="margin-top: 15px">Sold:</li>
+        <li>{{Category}}</li>
+        <li>{{Description}}</li>
+        <li>{{SalePrice}}</li>
+        <li>{{BarCode}}</li>
+    </ul>
+</template>
+
+<template name="Product">
+    <ul class="list-inline" style="margin-left: 25px">
+        <li style="margin-top: 15px">Inventory:</li>
+        <li>{{Category}}</li>
+        <li>{{Description}}</li>
+        <li>{{Price}}</li>
+        <li>{{BarCode}}</li>
+    </ul>
 </template>
