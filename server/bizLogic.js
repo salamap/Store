@@ -92,22 +92,22 @@ if (Meteor.isServer) {
       if (!user) {
         throw new Meteor.Error(401, "You need to login!");
       }
-      // find which product is to be given back and which one is to be taken in return
-      var takeWithA  = ProductCollection.findOne({BarCode: valA}),
-        giveBackB  = SoldCollection.findOne({BarCode: valB}),
-        takeWithB  = ProductCollection.findOne({BarCode: valB}),
-        giveBackA  = SoldCollection.findOne({BarCode: valA}),
-        response   = {};
+      // find which product is to be returned and which one is to be purchased
+      var purchaseA  = ProductCollection.findOne({BarCode: valA}),
+          returnB  = SoldCollection.findOne({BarCode: valB}),
+          purchaseB  = ProductCollection.findOne({BarCode: valB}),
+          returnA  = SoldCollection.findOne({BarCode: valA}),
+          response   = {};
 
-      if (giveBackA && takeWithB) {
-        response.receipt  = exchangeItems(giveBackA, takeWithB);
-        response.giveBack = giveBackA;
-        response.takeWith = takeWithB;
+      if (returnA && purchaseB) {
+        response.receipt  = exchangeItems(returnA, purchaseB);
+        response.return = returnA;
+        response.purchase = purchaseB;
       }
-      else if (giveBackB && takeWithA) {
-        response.receipt  = exchangeItems(giveBackB, takeWithA);
-        response.giveBack = giveBackB;
-        response.takeWith = takeWithA;
+      else if (returnB && purchaseA) {
+        response.receipt  = exchangeItems(returnB, purchaseA);
+        response.return = returnB;
+        response.purchase = purchaseA;
       }
       else {
         // if both fail then throw error
@@ -140,15 +140,6 @@ if (Meteor.isServer) {
         });
 
         itemToReturn.SalePrice  = "";
-        //ReceiptCollection.update(
-        //  { BarCode: receiptCode },
-        //  { $push: {
-        //      ReturnItems: {
-        //          $each: [itemToReturn]
-        //      }
-        //    }
-        //  }
-        //);
       }
       else {
         throw new Meteor.Error("invalid-codes", "THE PROVIDED BAR CODES DO NOT MATCH ANY PRODUCT IN THE SYSTEM.");
@@ -156,59 +147,39 @@ if (Meteor.isServer) {
 
       return ReturnReceiptCollection.findOne({BarCode: receiptCode});
     }
-
   });
 
-  // The product the customer gives back and the product the customer takes in turn
-  function exchangeItems (give, take) {
+  // The product the customer returns and the product the customer purchases
+  function exchangeItems (returnItem, purchaseItem) {
     var receiptCode     = Date.now().toString().slice(-10);
     var transactionDate = new Date();
 
-    // update the properties of the item the customer is taking
-    // for now assume exchanges will be one to one, no price difference
-    take.SoldOn      = transactionDate;
-    take.SalePrice   = take.Price;
-    take.ReceiptCode = receiptCode;
+    // update the properties of the item the customer is purchasing
+    purchaseItem.SoldOn      = transactionDate;
+    purchaseItem.SalePrice   = purchaseItem.Price;
+    purchaseItem.ReceiptCode = receiptCode;
 
-    // remove taken product from product collection and add to sold collection
-    ProductCollection.remove(take._id);
-    SoldCollection.insert(take);
+    // remove purchased item from product collection and add to sold collection
+    ProductCollection.remove(purchaseItem._id);
+    SoldCollection.insert(purchaseItem);
 
-    // update the properties of the item the customer is giving back.
+    // update the properties of the item the customer is returning.
     // do not overwrite SalePrice because we want to know what it sold for
-    give.SoldOn      = "";
-    give.ReceiptCode = "";
+    returnItem.SoldOn      = "";
+    returnItem.ReceiptCode = "";
 
-    // remove product given back from sold collection and add to product collection
-    ProductCollection.insert(give);
-    SoldCollection.remove(give._id);
+    // remove returned item from sold collection and add to product collection
+    ProductCollection.insert(returnItem);
+    SoldCollection.remove(returnItem._id);
 
-    // add the given item and the taken item to the exchange array in the receipt document
+    // add purchased item and returned item to the receipt document
     ExchangeReceiptCollection.insert({
       BarCode:        receiptCode,
-      PurchaseItems:  [take],
-      ReturnedItems: [give],
-      Total:          accounting.formatMoney(accounting.unformat(take.SalePrice) - accounting.unformat(give.SalePrice)),
+      PurchaseItems:  [purchaseItem],
+      ReturnedItems:  [returnItem],
+      Total:          accounting.formatMoney(accounting.unformat(purchaseItem.SalePrice) - accounting.unformat(returnItem.SalePrice)),
       createdAt:      transactionDate
     });
-    //ReceiptCollection.update(
-    //  { BarCode: receiptCode },
-    //  { $push: {
-    //      ExchangeItems: {
-    //          $each: [take, give]
-    //      }
-    //    }
-    //  }
-    //);
-
-    // not necessary for now
-    //ReceiptCollection.update(
-    //  {
-    //      BarCode: receiptCode,
-    //      'PurchaseItems._id': give._id
-    //  },
-    //  { $set: { "PurchaseItems.$" : give } }
-    //);
 
     return ExchangeReceiptCollection.findOne({BarCode: receiptCode});
   }
