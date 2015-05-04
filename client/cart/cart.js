@@ -82,7 +82,7 @@ if (Meteor.isClient) {
                             className: "btn-success",
                             callback: function () {
                                 Meteor.call('updateSold', cart.find({}).fetch(), originalPrices, accounting.formatMoney(Session.get("cartTotal")), function(err, response) {
-                                    if (response) {
+                                    if (!err && response) {
                                         Session.set("receipt", response);
                                         bootbox.dialog ({
                                             title: "PURCHASE RECEIPT",
@@ -98,8 +98,11 @@ if (Meteor.isClient) {
                                             }
                                         });
                                     }
-                                    else {
-                                        bootbox.alert("AN ERROR OCCURRED WHILE PROCESSING THE PURCHASE.");
+                                    else if (err && err.error != "invalid-codes") {
+                                      bootbox.alert(err.error);
+                                    }
+                                    else if (err && err.error === "invalid-codes") {
+                                      bootbox.alert(err.reason);
                                     }
                                     cart.remove({});
                                     total = 0.00;

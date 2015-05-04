@@ -27,10 +27,14 @@ if (Meteor.isClient) {
             }
             else {
                 var code = Date.now().toString().slice(-9);
-                Meteor.call('addToInventory', $desc.val().trim(), category, $price.val().trim(), code);
-                $desc.val("");
-                $price.val("");
-                $("#prodCat").html('Category <span class="caret"></span>');
+                Meteor.call('addToInventory', $desc.val().trim(), category, $price.val().trim(), code, function (err, response) {
+                  if (err) {
+                    bootbox.alert(err.reason);
+                  }
+                  $desc.val("");
+                  $price.val("");
+                  $("#prodCat").html('Category <span class="caret"></span>');
+                });
                 //$("#barCodeImage").barcode({code: code, crc: false}, "std25", {barWidth: 1, barHeight: 80, output: "svg"});
             }
             return;
@@ -60,7 +64,11 @@ if (Meteor.isClient) {
                         label: "CONFIRM",
                         className: "btn-primary",
                         callback: function() {
-                            Meteor.call('deleteFromInventory', that._id);
+                            Meteor.call('deleteFromInventory', that._id, function (err, response) {
+                              if (err) {
+                                bootbox.alert(err.reason);
+                              }
+                            });
                             // if the barcode is still up clear it out when removing an item from the inventory
                             //$("#barCodeImage").empty();
                         }
