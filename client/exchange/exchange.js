@@ -43,7 +43,13 @@ if (Meteor.isClient) {
                     buttons: {
                         cancel: {
                             label:"CANCEL",
-                            className: "btn-default"
+                            className: "btn-default",
+                            callback: function () {
+                                Session.set("rowCount", 1);
+                                arrayA = [];
+                                arrayB = [];
+                                resetDOM();
+                            }
                         },
                         confirm: {
                             label: "CONFIRM",
@@ -85,7 +91,7 @@ if (Meteor.isClient) {
         }
     });
 
-  function processInput() {
+  var processInput = function() {
     var $itemA = $("#"+Session.get("rowCount")+"_1"),
         $itemB = $("#"+Session.get("rowCount")+"_2");
 
@@ -94,9 +100,9 @@ if (Meteor.isClient) {
       arrayB.push($itemB.val());
       updateDOM();
     }
-  }
+  };
 
-  function isValid(itemA, itemB) {
+  var isValid = function(itemA, itemB) {
     if (itemA.length === 0 || itemB.length === 0) {
       bootbox.alert("ERROR: THERE ARE MISSING BAR CODES");
       return false;
@@ -122,9 +128,9 @@ if (Meteor.isClient) {
       return false;
     }
     return true;
-  }
+  };
 
-  function updateDOM() {
+  var updateDOM = function() {
     Session.set("rowCount", Session.get("rowCount") + 1);
 
     var firstId    = Session.get("rowCount")+"_1",
@@ -138,9 +144,9 @@ if (Meteor.isClient) {
     $addBtn.remove();
     $minusBtn.remove();
     $formGrp.append(newElems);
-  }
+  };
 
-  function rewindDOM() {
+  var rewindDOM = function() {
     var $addBtn     = $("#addToTransaction"),
         $minusBtn   = $("#deleteFromTransaction"),
         $formGrp    = $(".exchange-form-group"),
@@ -157,12 +163,12 @@ if (Meteor.isClient) {
     else {
       $formGrp.append('<button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>');
     }
-  }
+  };
 
-  function resetDOM() {
+  var resetDOM = function() {
     var $inlineForm  = $(".form-inline"),
         origFormGrp = '<form class="form-inline"> <div class="exchange-form-group"> <div class="form-group"> <input type="text" class="form-control" id="1_1" placeholder="Bar Code"> </div> <div class="form-group"> <input type="text" class="form-control" id="1_2" placeholder="Bar Code"> </div> <button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span> </button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button> </div> <div class="form-group"> <button type="submit" class="btn btn-primary exchange">Exchange</button> </div> </form>';
     $inlineForm.remove();
     $("#exchangeForm").append(origFormGrp);
-  }
+  };
 }
