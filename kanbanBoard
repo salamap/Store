@@ -1,11 +1,10 @@
-Need a way to handle multiple returns or exchanges in a
-single transaction.
-
 Revisit the UI
     responsive
     showing the active nav item
     Icon
     less?
+
+Issue related to cancel during the return and exchange flows.
 
 naming conventions
 

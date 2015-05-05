@@ -129,34 +129,44 @@ if (Meteor.isServer) {
       }
       return processExchange(returnArray, purchaseArray);
     },
-    doReturn: function (itemCode) {
+    doReturn: function (itemsArray) {
       var user = Meteor.user();
       if (!user) {
         throw new Meteor.Error(401, "You need to login!");
       }
-      var itemToReturn = SoldCollection.findOne({BarCode: itemCode});
-      var receiptCode  = Date.now().toString().slice(-10);
-      var transactionDate = new Date();
+      var length          = itemsArray.length,
+          returnArray     = [],
+          receiptCode     = Date.now().toString().slice(-10),
+          returnTotal     = 0.0;
+          transactionDate = new Date();
 
-      if (itemToReturn) {
-        itemToReturn.SoldOn      = "";
-        itemToReturn.ReceiptCode = "";
+      for (var i = 0; i < length; i++) {
+        var itemToReturn = SoldCollection.findOne({BarCode: itemsArray[i]});
+        if (itemToReturn) {
+          itemToReturn.SoldOn      = "";
+          itemToReturn.ReceiptCode = "";
 
-        ProductCollection.insert(itemToReturn);
-        SoldCollection.remove(itemToReturn._id);
-
-        ReturnReceiptCollection.insert({
-          BarCode:        receiptCode,
-          ReturnItems:    [itemToReturn],
-          Total:          itemToReturn.SalePrice,
-          createdAt:      transactionDate
-        });
-
-        itemToReturn.SalePrice  = "";
+          if (ProductCollection.findOne({_id: itemToReturn._id})) {
+            throw new Meteor.Error("invalid-codes", "ERROR: THE ITEM YOU WISH TO RETURN HAS ALREADY BEEN RETURNED.");
+          }
+          else {
+            returnTotal += accounting.unformat(itemToReturn.SalePrice);
+            ProductCollection.insert(itemToReturn);
+            SoldCollection.remove(itemToReturn._id);
+            returnArray.push(itemToReturn);
+          }
+        }
+        else {
+          throw new Meteor.Error("invalid-codes", "THE PROVIDED BAR CODES DO NOT MATCH ANY PRODUCT IN THE SYSTEM.");
+        }
       }
-      else {
-        throw new Meteor.Error("invalid-codes", "THE PROVIDED BAR CODES DO NOT MATCH ANY PRODUCT IN THE SYSTEM.");
-      }
+
+      ReturnReceiptCollection.insert({
+        BarCode:        receiptCode,
+        ReturnItems:    returnArray,
+        Total:          accounting.formatMoney(returnTotal),
+        createdAt:      transactionDate
+      });
 
       return ReturnReceiptCollection.findOne({BarCode: receiptCode});
     }
@@ -171,32 +181,30 @@ if (Meteor.isServer) {
         returnTotal     = 0.0;
 
     for (var i = 0; i < length; i++) {
-        // update the properties of the item the customer is purchasing
-        purchaseArray[i].SoldOn = transactionDate;
-        purchaseArray[i].SalePrice = purchaseArray[i].Price;
-        purchaseTotal += accounting.unformat(purchaseArray[i].SalePrice);
-        purchaseArray[i].ReceiptCode = receiptCode;
-
         // remove purchased item from product collection and add to sold collection
         if (SoldCollection.findOne({_id: purchaseArray[i]._id})) {
             throw new Meteor.Error("invalid-codes", "ERROR: THE ITEM YOU WISH TO PURCHASE HAS ALREADY BEEN SOLD.");
         }
         else {
+            // update the properties of the item the customer is purchasing
+            purchaseArray[i].SoldOn = transactionDate;
+            purchaseArray[i].SalePrice = purchaseArray[i].Price;
+            purchaseTotal += accounting.unformat(purchaseArray[i].SalePrice);
+            purchaseArray[i].ReceiptCode = receiptCode;
             ProductCollection.remove(purchaseArray[i]._id);
             SoldCollection.insert(purchaseArray[i]);
         }
-
-        // update the properties of the item the customer is returning.
-        // do not overwrite sale price so we can show it on the receipt
-        returnArray[i].SoldOn      = "";
-        returnArray[i].ReceiptCode = "";
-        returnTotal += accounting.unformat(returnArray[i].SalePrice);
 
         // remove returned item from sold collection and add to product collection
         if (ProductCollection.findOne({_id: returnArray[i]._id})) {
             throw new Meteor.Error("invalid-codes", "ERROR: THE ITEM YOU WISH TO RETURN HAS ALREADY BEEN RETURNED.");
         }
         else {
+            // update the properties of the item the customer is returning.
+            // do not overwrite sale price so we can show it on the receipt
+            returnArray[i].SoldOn      = "";
+            returnArray[i].ReceiptCode = "";
+            returnTotal += accounting.unformat(returnArray[i].SalePrice);
             ProductCollection.insert(returnArray[i]);
             SoldCollection.remove(returnArray[i]._id);
         }

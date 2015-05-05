@@ -1,13 +1,20 @@
 <template name="return">
-    <div class="col-md-5 col-sm-12">
-        <p>
-            Manually enter or scan the bar codes of the item you wish to return
-        </p>
-        <form class="form-inline" id="barCodeForm" role="form">
-            <div class="form-group">
-                <input type="text" class="form-control" id="search" placeholder="Bar Code"/>
-                <input type="submit" value="Return" class="btn btn-primary btn-sm return"/>
-            </div>
-        </form>
-    </div>
+  <div class="col-md-12 col-sm-12" id="returnForm">
+    <form class="form-inline">
+      <div class="return-form-group">
+        <div class="form-group">
+          <input type="text" class="form-control" id="search_1" placeholder="Bar Code">
+        </div>
+        <button class="btn btn-default" id="addToTransaction">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button class="btn btn-default" id="deleteFromTransaction">
+          <span class="glyphicon glyphicon-minus"></span>
+        </button>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary return">Return</button>
+      </div>
+    </form>
+  </div>
 </template>
