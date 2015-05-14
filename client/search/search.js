@@ -4,7 +4,7 @@
 if (Meteor.isClient) {
   Template.search.helpers({
     indexes: function() {
-      return ['Product','Sold'];
+      return ['Product', 'Sold'];
     }
   })
 }

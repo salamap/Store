@@ -2,3 +2,11 @@
 .idea/workspace.xml
 
 .idea/codeStyleSettings.xml
+
+.idea/jsLinters/jslint.xml
+
+.idea/inspectionProfiles/profiles_settings.xml
+
+.idea/inspectionProfiles/Project_Default.xml
+
+.idea/jsLinters/jscs.xml
