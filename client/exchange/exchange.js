@@ -136,8 +136,8 @@ if (Meteor.isClient) {
       var $checkItemA = $('#' + (1 + i) + '_1');
       var $checkItemB = $('#' + (1 + i) + '_2');
 
-      if ($checkItemA.val() !== arrayA[i] || $checkItemB.val() !== arrayB[i]) {
-        if (isValid($checkItemA.val(), $checkItemB.val())) {
+      if ($checkItemA.val() !== arrayA[i]) {
+        if (isValidEdit($checkItemA.val(), $checkItemB.val())) {
           arrayA[i] = $checkItemA.val();
           arrayB[i] = $checkItemB.val();
         }
@@ -145,6 +145,40 @@ if (Meteor.isClient) {
           return false;
         }
       }
+      else if ($checkItemB.val() !== arrayB[i]) {
+        if (isValidEdit($checkItemB.val(), $checkItemA.val())) {
+          arrayA[i] = $checkItemA.val();
+          arrayB[i] = $checkItemB.val();
+        }
+        else {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  var isValidEdit = function(editedItem, siblingItem) {
+    if (editedItem.length === 0) {
+      bootbox.alert('ERROR: THERE ARE MISSING BAR CODES');
+      return false;
+    }
+    else if (isNaN(editedItem)) {
+      bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
+      return false;
+    }
+    else if (editedItem.length != 9) {
+      bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
+      return false;
+    }
+    else if (editedItem.toLowerCase() === siblingItem.toLowerCase()) {
+      bootbox.alert('ERROR: DUPLICATE BAR CODES ARE NOT ALLOWED');
+      return false;
+    }
+    else if (Session.get('rowCount') > 1 && (_.contains(arrayA, editedItem) || _.contains(arrayB, editedItem))) {
+      bootbox.alert('ERROR: DUPLICATE BAR CODES ARE NOT ALLOWED');
+      return false;
     }
 
     return true;

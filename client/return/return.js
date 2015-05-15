@@ -56,8 +56,6 @@ if (Meteor.isClient) {
       }
 
       if (returnIsReady) {
-        returnArray.push($item.val());
-
         bootbox.dialog({
           title: 'RETURN',
           message: 'CONFIRM TO CONTINUE WITH THIS RETURN.',
@@ -130,7 +128,7 @@ if (Meteor.isClient) {
       var $checkItem = $('#search_' + (1 + i));
 
       if ($checkItem.val() !== returnArray[i]) {
-        if (isValid($checkItem.val())) {
+        if (isValidReturn($checkItem.val())) {
           returnArray[i] = $checkItem.val();
         }
         else {
