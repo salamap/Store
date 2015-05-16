@@ -11,8 +11,8 @@ mizzao:bootboxjs
 sacha:spin
 accounts-ui
 accounts-password
-mizzao:bootstrap-3
 iron:router
 clinical:barcode
 lepozepo:accounting
 matteodem:easy-search
+twbs:bootstrap
