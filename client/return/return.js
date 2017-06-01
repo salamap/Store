@@ -3,55 +3,52 @@
  */
 if (Meteor.isClient) {
   Session.set('rowCount', 1);
-  var returnArray = [];
+  let returnArray = [];
 
-  Template.return.rendered = function() {
-    this.$('#search_' + Session.get('rowCount')).focus();
+  Template.return.rendered = function () {
+    this.$(`#search_${Session.get('rowCount')}`).focus();
   };
 
   Template.return.events({
-    'click #addToTransaction': function(event) {
+    'click #addToTransaction': function (event) {
       event.preventDefault();
       processReturnInput();
     },
 
-    'click #deleteFromTransaction': function(event) {
+    'click #deleteFromTransaction': function (event) {
       event.preventDefault();
-      if (Session.get('rowCount')  > 1) {
+      if (Session.get('rowCount') > 1) {
         if (Session.get('rowCount') > returnArray.length) {
           rewindReturnDOM();
-        }
-        else if (Session.get('rowCount')  === returnArray.length) {
+        } else if (Session.get('rowCount') === returnArray.length) {
           if (returnArray.length > 0) {
             returnArray.pop();
           }
 
           rewindReturnDOM();
         }
-      }
-      else if (Session.get('rowCount')  === 1 && returnArray.length > 0) {
+      } else if (Session.get('rowCount') === 1 && returnArray.length > 0) {
         returnArray.pop();
 
-        var $item = $('#search_' + Session.get('rowCount'));
+        const $item = $(`#search_${Session.get('rowCount')}`);
         $item.val('');
       }
     },
 
-    'click .return': function(event) {
+    'click .return': function (event) {
       event.preventDefault();
 
-      var returnIsReady = false;
+      let returnIsReady = false;
 
       if (Session.get('rowCount') > returnArray.length) {
-        var $item = $('#search_' + Session.get('rowCount'));
+        const $item = $(`#search_${Session.get('rowCount')}`);
 
         if (isValidReturn($item.val())) {
           returnArray.push($item.val());
 
           returnIsReady = isValidReturnUpdate();
         }
-      }
-      else if (Session.get('rowCount') === returnArray.length) {
+      } else if (Session.get('rowCount') === returnArray.length) {
         returnIsReady = isValidReturnUpdate();
       }
 
@@ -63,37 +60,35 @@ if (Meteor.isClient) {
             cancel: {
               label: 'CANCEL',
               className: 'btn-default',
-              callback: function() {
+              callback() {
                 Session.set('rowCount', 1);
                 returnArray = [];
                 resetReturnDOM();
-              }
+              },
             },
             confirm: {
               label: 'CONFIRM',
               className: 'btn-success',
-              callback: function() {
-                Meteor.call('doReturn', returnArray, function(err, response) {
+              callback() {
+                Meteor.call('doReturn', returnArray, (err, response) => {
                   if (err && err.error === 'invalid-codes') {
                     bootbox.alert(err.reason);
-                  }
-                  else if (err && err.error != 'invalid-codes') {
+                  } else if (err && err.error != 'invalid-codes') {
                     bootbox.alert(err.error);
-                  }
-                  else if (!err && response) {
+                  } else if (!err && response) {
                     Session.set('receipt', response);
-                    bootbox.dialog ({
+                    bootbox.dialog({
                       title: 'RETURN RECEIPT',
                       message: renderTemplate(Template.returnReceipt),
                       buttons: {
                         confirm: {
                           label: 'PRINT',
                           className: 'btn-default',
-                          callback: function() {
+                          callback() {
                             window.print();
-                          }
-                        }
-                      }
+                          },
+                        },
+                      },
                     });
                   }
                 });
@@ -101,20 +96,19 @@ if (Meteor.isClient) {
                 Session.set('rowCount', 1);
                 returnArray = [];
                 resetReturnDOM();
-              }
-            }
-          }
+              },
+            },
+          },
         });
       }
-    }
+    },
   });
 
-  var processReturnInput = function() {
+  var processReturnInput = function () {
     if (returnArray.length != 0 && returnArray.length === Session.get('rowCount')) {
       updateReturnDOM();
-    }
-    else {
-      var $item = $('#search_' + Session.get('rowCount'));
+    } else {
+      const $item = $(`#search_${Session.get('rowCount')}`);
 
       if (isValidReturn($item.val())) {
         returnArray.push($item.val());
@@ -123,15 +117,14 @@ if (Meteor.isClient) {
     }
   };
 
-  var isValidReturnUpdate = function() {
-    for (var i = 0; i < returnArray.length; i++) {
-      var $checkItem = $('#search_' + (1 + i));
+  var isValidReturnUpdate = function () {
+    for (let i = 0; i < returnArray.length; i++) {
+      const $checkItem = $(`#search_${1 + i}`);
 
       if ($checkItem.val() !== returnArray[i]) {
         if (isValidReturn($checkItem.val())) {
           returnArray[i] = $checkItem.val();
-        }
-        else {
+        } else {
           return false;
         }
       }
@@ -140,20 +133,17 @@ if (Meteor.isClient) {
     return true;
   };
 
-  var isValidReturn = function(item) {
+  var isValidReturn = function (item) {
     if (item.length === 0) {
       bootbox.alert('ERROR: THERE ARE MISSING BAR CODES');
       return false;
-    }
-    else if (isNaN(item)) {
+    } else if (isNaN(item)) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
-    }
-    else if (item.length != 9) {
+    } else if (item.length != 9) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
-    }
-    else if (Session.get('rowCount') > 1 && (_.contains(returnArray, item))) {
+    } else if (Session.get('rowCount') > 1 && (_.contains(returnArray, item))) {
       bootbox.alert('ERROR: DUPLICATE BAR CODES ARE NOT ALLOWED');
       return false;
     }
@@ -161,43 +151,42 @@ if (Meteor.isClient) {
     return true;
   };
 
-  var updateReturnDOM = function() {
+  var updateReturnDOM = function () {
     Session.set('rowCount', Session.get('rowCount') + 1);
 
-    var searchId   = 'search_' + Session.get('rowCount');
-    var newFormGrp = Session.get('rowCount') + '-return-form-group';
-    var $addBtn    = $('#addToTransaction');
-    var $minusBtn  = $('#deleteFromTransaction');
-    var $formGrp   = $('.return-form-group');
-    var newElems   = '<div class="' + newFormGrp + '"><div class="form-group"><input type="text" class="form-control" id=' + searchId + ' placeholder="Bar Code"></div> <button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>';
+    const searchId = `search_${Session.get('rowCount')}`;
+    const newFormGrp = `${Session.get('rowCount')}-return-form-group`;
+    const $addBtn = $('#addToTransaction');
+    const $minusBtn = $('#deleteFromTransaction');
+    const $formGrp = $('.return-form-group');
+    const newElems = `<div class="${newFormGrp}"><div class="form-group"><input type="text" class="form-control" id=${searchId} placeholder="Bar Code"></div> <button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>`;
 
     $addBtn.remove();
     $minusBtn.remove();
     $formGrp.append(newElems);
   };
 
-  var rewindReturnDOM = function() {
-    var $addBtn    = $('#addToTransaction');
-    var $minusBtn  = $('#deleteFromTransaction');
-    var $formGrp   = $('.return-form-group');
-    var deleteElem  = Session.get('rowCount') + '-return-form-group';
+  var rewindReturnDOM = function () {
+    const $addBtn = $('#addToTransaction');
+    const $minusBtn = $('#deleteFromTransaction');
+    const $formGrp = $('.return-form-group');
+    const deleteElem = `${Session.get('rowCount')}-return-form-group`;
 
     Session.set('rowCount', Session.get('rowCount') - 1);
     $addBtn.remove();
     $minusBtn.remove();
-    $('.' + deleteElem).remove();
+    $(`.${deleteElem}`).remove();
 
     if (Session.get('rowCount') > 1) {
-      $('.' + Session.get('rowCount') + 'return-form-group').append('<button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>');
-    }
-    else {
+      $(`.${Session.get('rowCount')}return-form-group`).append('<button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>');
+    } else {
       $formGrp.append('<button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button>');
     }
   };
 
-  var resetReturnDOM = function() {
-    var $inlineForm  = $('.form-inline');
-    var origFormGrp = '<form class="form-inline"> <div class="return-form-group"> <div class="form-group"> <input type="text" class="form-control" id="search_1" placeholder="Bar Code"> </div> <button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span> </button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button> </div> <div class="form-group"> <button type="submit" class="btn btn-primary exchange">Exchange</button> </div> </form>';
+  var resetReturnDOM = function () {
+    const $inlineForm = $('.form-inline');
+    const origFormGrp = '<form class="form-inline"> <div class="return-form-group"> <div class="form-group"> <input type="text" class="form-control" id="search_1" placeholder="Bar Code"> </div> <button class="btn btn-default" id="addToTransaction"> <span class="glyphicon glyphicon-plus"></span> </button> <button class="btn btn-default" id="deleteFromTransaction"> <span class="glyphicon glyphicon-minus"></span> </button> </div> <div class="form-group"> <button type="submit" class="btn btn-primary exchange">Exchange</button> </div> </form>';
     $inlineForm.remove();
     $('#returnForm').append(origFormGrp);
   };

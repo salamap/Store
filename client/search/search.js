@@ -3,8 +3,8 @@
  */
 if (Meteor.isClient) {
   Template.search.helpers({
-    indexes: function() {
+    indexes() {
       return ['Product', 'Sold'];
-    }
-  })
+    },
+  });
 }
