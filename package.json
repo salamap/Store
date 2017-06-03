@@ -1,0 +1,51 @@
+{
+  "name": "store",
+  "version": "1.0.0",
+  "description": "mobile POS and inventory web app",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-runtime": "^6.23.0",
+    "bcrypt": "^1.0.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-module-utils": "^2.0.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.0.1",
+    "esrecurse": "^4.1.0",
+    "locate-path": "^2.0.0",
+    "read-pkg-up": "^2.0.0"
+  },
+  "devDependencies": {
+    "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "babel-eslint": "^7.2.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-meteor": "^4.0.1",
+    "eslint-plugin-react": "^7.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "pretest": "npm run lint --silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salamap/Store.git"
+  },
+  "author": "Peter Salama",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salamap/Store/issues"
+  },
+  "homepage": "https://github.com/salamap/Store#readme"
+}
