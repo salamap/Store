@@ -1,4 +1,3 @@
-// jscs:disable disallowTrailingWhitespace
 /**
  * Created by petersalama on 1/10/15.
  */
@@ -15,7 +14,6 @@ if (Meteor.isClient) {
     'click .next': function () {
       const count = Session.get('soldCursor') + SoldCollection.find({}).count();
 
-      // This is costly because we are making a call to the server
       Meteor.call('reportHasMore', count, (err, response) => {
         const currProdCursor = Session.get('soldCursor');
         if (response) {

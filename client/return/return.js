@@ -73,7 +73,7 @@ if (Meteor.isClient) {
                 Meteor.call('doReturn', returnArray, (err, response) => {
                   if (err && err.error === 'invalid-codes') {
                     bootbox.alert(err.reason);
-                  } else if (err && err.error != 'invalid-codes') {
+                  } else if (err && err.error !== 'invalid-codes') {
                     bootbox.alert(err.error);
                   } else if (!err && response) {
                     Session.set('receipt', response);
@@ -105,7 +105,7 @@ if (Meteor.isClient) {
   });
 
   var processReturnInput = function () {
-    if (returnArray.length != 0 && returnArray.length === Session.get('rowCount')) {
+    if (returnArray.length !== 0 && returnArray.length === Session.get('rowCount')) {
       updateReturnDOM();
     } else {
       const $item = $(`#search_${Session.get('rowCount')}`);

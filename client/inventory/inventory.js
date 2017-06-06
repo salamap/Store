@@ -84,7 +84,6 @@ if (Meteor.isClient) {
     'click .next': function (event, template) {
       const count = Session.get('prodCursor') + ProductCollection.find({}).count();
 
-      // This is costly because we are making a call to the server
       Meteor.call('inventoryHasMore', count, (err, response) => {
         const currProdCursor = Session.get('prodCursor');
         if (response) {
