@@ -78,7 +78,7 @@ if (Meteor.isClient) {
                 Meteor.call('doExchange', arrayA, arrayB, (err, response) => {
                   if (err && err.error === 'invalid-codes') {
                     bootbox.alert(err.reason);
-                  } else if (err && err.error != 'invalid-codes') {
+                  } else if (err && err.error !== 'invalid-codes') {
                     bootbox.alert(err.error);
                   } else if (!err && response) {
                     Session.set('receipt', response);
@@ -111,7 +111,7 @@ if (Meteor.isClient) {
   });
 
   var processInput = function () {
-    if (arrayA.length != 0 && arrayA.length === Session.get('rowCount')) {
+    if (arrayA.length !== 0 && arrayA.length === Session.get('rowCount')) {
       updateDOM();
     } else {
       const $itemA = $(`#${Session.get('rowCount')}_1`);
@@ -157,7 +157,7 @@ if (Meteor.isClient) {
     } else if (isNaN(editedItem)) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
-    } else if (editedItem.length != 9) {
+    } else if (editedItem.length !== 9) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
     } else if (editedItem.toLowerCase() === siblingItem.toLowerCase()) {
@@ -178,7 +178,7 @@ if (Meteor.isClient) {
     } else if (isNaN(itemA) || isNaN(itemB)) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
-    } else if (itemA.length != 9 || itemB.length != 9) {
+    } else if (itemA.length !== 9 || itemB.length !== 9) {
       bootbox.alert('ERROR: BAR CODE FORMAT IS INVALID');
       return false;
     } else if (itemA.toLowerCase() === itemB.toLowerCase()) {

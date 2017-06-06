@@ -169,6 +169,17 @@ if (Meteor.isServer) {
 
       return ReturnReceiptCollection.findOne({ BarCode: receiptCode });
     },
+
+    getReceiptByCode(code) {
+      code = code || '';
+      let r = ExchangeReceiptCollection.findOne({ BarCode: code.toString() });
+      if (r) return { type: 'Exchange', receipt: r };
+      r = PurchaseReceiptCollection.findOne({ BarCode: code.toString() });
+      if (r) return { type: 'Purchase', receipt: r };
+      r = ReturnReceiptCollection.findOne({ BarCode: code.toString() });
+      if (r) return { type: 'Return', receipt: r };
+      throw new Meteor.Error('invalid-codes', 'ERROR: INVALID BAR CODE');
+    },
   });
 
   // The product the customer returns and the product the customer purchases

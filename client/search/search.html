@@ -1,6 +1,6 @@
 <template name="search">
     <div class="col-md-12 col-sm-12">
-        <div class="input-group">
+        <div class="input-group" style="margin-bottom:10px">
             {{> esInput index=indexes placeholder="Search..." class="form-control"}}
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="searching">
@@ -10,13 +10,25 @@
         </div>
     </div>
 
-    <div>
+    <div style="margin-top:20px; margin-left:15px">
       {{#esEach index="Product"}}
         {{> Product}}
       {{/esEach}}
 
       {{#esEach index="Sold"}}
         {{> Sold}}
+      {{/esEach}}
+
+      {{#esEach index="PurchaseReceipts"}}
+        {{> PurchaseReceipts}}
+      {{/esEach}}
+      
+      {{#esEach index="ExchangeReceipts"}}
+        {{> ExchangeReceipts}}
+      {{/esEach}}
+    
+      {{#esEach index="ReturnReceipts"}}
+        {{> ReturnReceipts}}
       {{/esEach}}
 
       {{#ifEsHasNoResults index=indexes}}
@@ -31,22 +43,56 @@
 
 
 <template name="Sold">
-    <ul class="list-inline" style="margin-left: 25px">
-        <li style="margin-top: 15px">Sold:</li>
-        <li>{{Category}}</li>
-        <li>{{Description}}</li>
-        <li>{{Price}}</li>
-        <li>{{SalePrice}}</li>
-        <li>{{BarCode}}</li>
-    </ul>
+    <div class="row" style="margin-top: 5px">
+        <div class="col-sm-2">SOLD:</div>
+        <div class="col-sm-2">{{BarCode}}</div>
+        <div class="col-sm-2">{{Category}}</div>
+        <div class="col-sm-2">{{Description}}</div>
+        <div class="col-sm-2">{{SalePrice}}</div>
+        <div class="col-sm-2"><a href="#" id='code'>{{ReceiptCode}}</a></div>
+    </div>
 </template>
 
 <template name="Product">
-    <ul class="list-inline" style="margin-left: 25px">
-        <li style="margin-top: 15px">Inventory:</li>
-        <li>{{Category}}</li>
-        <li>{{Description}}</li>
-        <li>{{Price}}</li>
-        <li>{{BarCode}}</li>
-    </ul>
+    <div class="row" style="margin-top: 5px">
+        <div class="col-sm-2">INVENTORY:</div>
+        <div class="col-sm-2">{{BarCode}}</div>
+        <div class="col-sm-2">{{Category}}</div>
+        <div class="col-sm-2">{{Description}}</div>
+        <div class="col-sm-2">{{Price}}</div>
+        <div class="col-sm-2"></div>
+    </div>
+</template>
+
+<template name="PurchaseReceipts">
+    <div class="row" style="margin-top: 5px">
+        <div class="col-sm-2">PURCHASE RECEIPT:</div>
+        <div class="col-sm-2">{{createdAt}}</div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">{{total}}</div>
+        <div class="col-sm-2"><a href="#" id='code'>{{BarCode}}</a></div>
+    </div>
+</template>
+
+<template name="ExchangeReceipts">
+    <div class="row" style="margin-top: 5px">
+        <div class="col-sm-2">EXCHANGE RECEIPT:</div>
+        <div class="col-sm-2">{{createdAt}}</div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">{{total}}</div>
+        <div class="col-sm-2"><a href="#" id='code'>{{BarCode}}</a></div>
+    </div>
+</template>
+
+<template name="ReturnReceipts">
+    <div class="row" style="margin-top: 5px">
+        <div class="col-sm-2">RETURN RECEIPT:</div>
+        <div class="col-sm-2">{{createdAt}}</div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">{{total}}</div>
+        <div class="col-sm-2"><a href="#" id='code'>{{BarCode}}</a></div>
+    </div>
 </template>
